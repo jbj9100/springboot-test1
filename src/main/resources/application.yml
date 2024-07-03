@@ -27,8 +27,8 @@ server:
 
 logging:
   level:
-    root: INFO # 전체 로깅 레벨 설정
-    com.vitolee.board.controller: DEBUG # ReadyCheckController의 로깅 레벨 설정
+#    root: INFO # 전체 로깅 레벨 설정
+#    com.vitolee.board.controller: DEBUG # ReadyCheckController의 로깅 레벨 설정
     org:
       hibernate:
         SQL: DEBUG
