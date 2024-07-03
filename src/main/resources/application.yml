@@ -30,6 +30,8 @@ logging:
 #    root: INFO # 전체 로깅 레벨 설정
 #    com.vitolee.board.controller: DEBUG # ReadyCheckController의 로깅 레벨 설정
     org:
+      org:
+        thymeleaf: ERROR
       hibernate:
         SQL: DEBUG
         type:
