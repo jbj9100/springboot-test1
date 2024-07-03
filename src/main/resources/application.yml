@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: board-application # 애플리케이션 이름
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://192.168.60.191:30050/testdb
@@ -13,13 +16,19 @@ spring:
       format_sql: true
       ddl-auto: create
 
-management:
-  endpoint:
-    health:
-      show-details: always
+server:
+  port: 8080 # 애플리케이션이 실행될 포트
+
+  health:
+    endpoint:
+      ready:
+        # '/ready' 엔드포인트에서 체크할 서비스 URL을 설정
+        url: "http://localhost:8080/was"
 
 logging:
   level:
+    root: INFO # 전체 로깅 레벨 설정
+    com.vitolee.board.controller: DEBUG # ReadyCheckController의 로깅 레벨 설정
     org:
       hibernate:
         SQL: DEBUG
