@@ -16,7 +16,7 @@ public class ReadyHealthIndicator implements HealthIndicator {
     @Override
     public Health health() {
         boolean isReady = checkIfReady();
-
+        System.out.println("health checking");
         if (isReady) {
             return Health.up().withDetail("ready", "The application is ready to serve requests.").build();
         } else {

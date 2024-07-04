@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OOM Monitoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #output {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 5px;
+            background: #fff;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<h1>OOM 모니터링</h1>
+<button id="startBtn">OOM 시작</button>
+<button id="stopBtn">OOM 중지</button>
+<div id="output"></div>
+
+<script>
+    let eventSource = null;
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+        if (eventSource) {
+            eventSource.close(); // 이전 이벤트 스트림 닫기
+        }
+
+        eventSource = new EventSource("/oom");
+        eventSource.onmessage = function(event) {
+            const outputDiv = document.getElementById("output");
+            const newMessage = document.createElement("p");
+            newMessage.className = "message";
+            newMessage.textContent = event.data;
+            outputDiv.appendChild(newMessage);
+            outputDiv.scrollTop = outputDiv.scrollHeight; // 자동 스크롤
+
+            if (event.data.includes("OOM 발생") || event.data.includes("종료됨")) {
+                eventSource.close(); // OOM 발생 또는 종료 시 이벤트 스트림 닫기
+                eventSource = null;
+            }
+        };
+    });
+
+    document.getElementById("stopBtn").addEventListener("click", () => {
+        if (eventSource) {
+            eventSource.close(); // 이벤트 스트림 닫기
+            eventSource = null;
+        }
+
+        fetch("/stop")
+            .then(response => response.text())
+            .then(data => {
+                const outputDiv = document.getElementById("output");
+                const stopMessage = document.createElement("p");
+                stopMessage.className = "message";
+                stopMessage.textContent = data;
+                outputDiv.appendChild(stopMessage);
+                outputDiv.scrollTop = outputDiv.scrollHeight; // 자동 스크롤
+            });
+    });
+</script>
+</body>
+</html>
